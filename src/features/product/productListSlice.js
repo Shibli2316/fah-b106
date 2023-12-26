@@ -20,16 +20,10 @@ export const fetchAllProductsAsync = createAsyncThunk(
 
 export const fetchProductsByFiltersAsync = createAsyncThunk(
   'product/fetchProductsByFilters',
-<<<<<<< HEAD
-  async (filter, sort, pagination) => {
-    const response = await fetchProductsByFilters(filter, sort, pagination);
-=======
   async (filter) => {
     const response = await fetchProductsByFilters(filter);
->>>>>>> parent of 720994d (updated filters and products)
-ilters and products)
-rn becomes the `fulfilled` action payload
-    return response.data;
+
+ return response.data;
   }
 );
 
