@@ -9,7 +9,7 @@ export function fetchAllProducts(amount = 1) {
 }
 
 
-export function fetchProductsByFilters(filter, sort) {
+export function fetchProductsByFilters(filter, sort, pagination) {
 
   // filter object
   let queryString ='';
@@ -23,6 +23,10 @@ export function fetchProductsByFilters(filter, sort) {
 
   for(let key in sort){
     queryString+=`${key}=${sort[key]}&`
+  }
+  
+  for(let key in pagination){
+    queryString+=`${key}=${pagination[key]}&`
   }
 
   return new Promise( async (resolve) => {
