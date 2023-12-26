@@ -16,9 +16,9 @@ import { ITEMS_PER_PAGE } from '../../../app/constants';
 
 
 const sortOptions = [
-  { name: 'Best Rating', sort: 'rating', order: 'desc', current: false },
-  { name: 'Price: Low to High', sort: 'price', order: 'asc', current: false },
-  { name: 'Price: High to Low', sort: 'price', order: 'desc', current: false },
+  { name: 'Best Rating', sort: 'rating', order:'desc', current: false },
+  { name: 'Price: Low to High', sort: 'price', order:'asc', current: false },
+  { name: 'Price: High to Low', sort: 'price', order:'desc', current: false },
 ]
 
 const filters = [
@@ -107,52 +107,47 @@ function classNames(...classes) {
 
 
 export default function ProductList() {
-
+  
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts)
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [page, setPage] = useState(1)
 
-
+  useEffect(() => {
+    dispatch(fetchProductsByFiltersAsync({filter, sort}))
+    
+  }, [dispatch, filter])
 
   const handleFilter = (e, section, option) => {
-    const newFilter = { ...filter }
-    if (e.target.checked) {
-      if (newFilter[section.id]) {
+    const newFilter = {...filter}
+    if(e.target.checked){
+      if(newFilter[section.id]){
         newFilter[section.id].push(option.value)
-      } else {
+      }else{
         newFilter[section.id] = [option.value]
       }
-    } else {
-      const index = newFilter[section.id].findIndex(el => el === option.value)
+    }else{
+      const index = newFilter[section.id].findIndex(el=>el===option.value)
       newFilter[section.id].splice(index, 1)
     }
-    console.log({ newFilter })
-
+      
     setFilter(newFilter)
+    
+
   }
   const handleSort = (e, option) => {
     const sort = { _sort: option.sort, _order: option.order }
-    console.log({ sort })
     setSort(sort)
-  }
-  const handlePage = (page) => {
-    setPage(page)
-  }
+    
 
-  useEffect(() => {
-    const pagination = { _page: page, _limit: ITEMS_PER_PAGE }
-    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }))
-  }, [dispatch, filter, sort, page])
+  }
 
   return (
     <div>
       <div className="bg-white">
         <div>
           {/* Mobile filter dialog */}
-          <MobileFilter handleFilter={handleFilter} mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} />
+          <MobileFilter handleFilter={handleFilter} mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen}/>
 
           <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
@@ -225,11 +220,11 @@ export default function ProductList() {
 
               <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                 {/* Filters */}
-                <DesktopFilter handleFilter={handleFilter} />
+                <DesktopFilter handleFilter={handleFilter}/>
 
                 {/* Product grid */}
                 <div className="lg:col-span-3">
-                  <ProductGrid products={products} />
+                      <ProductGrid products={products}/>
                 </div>
                 {/* Product grid ends */}
 
@@ -239,7 +234,7 @@ export default function ProductList() {
             {/* pagination section */}
 
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-              <Pagination page={page} setPage={setPage} handlePage={handlePage} />
+              <Pagination />
             </div>
           </main>
         </div>
@@ -250,8 +245,8 @@ export default function ProductList() {
 
 
 
-function MobileFilter({ mobileFiltersOpen, setMobileFiltersOpen, handleFilter }) {
-
+function MobileFilter({mobileFiltersOpen, setMobileFiltersOpen, handleFilter}) {
+  
   return (
     <>
       <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -268,31 +263,31 @@ function MobileFilter({ mobileFiltersOpen, setMobileFiltersOpen, handleFilter })
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
-          <div className="fixed inset-0 z-40 flex">
-            <Transition.Child
-              as={Fragment}
-              enter="transition ease-in-out duration-300 transform"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
-              leave="transition ease-in-out duration-300 transform"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full"
-            >
-              <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
-                <div className="flex items-center justify-between px-4">
-                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
-                  <button
-                    type="button"
-                    className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
-                    onClick={() => setMobileFiltersOpen(false)}
-                  >
-                    <span className="sr-only">Close menu</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
+              <div className="fixed inset-0 z-40 flex">
+                <Transition.Child
+                  as={Fragment}
+                  enter="transition ease-in-out duration-300 transform"
+                  enterFrom="translate-x-full"
+                  enterTo="translate-x-0"
+                  leave="transition ease-in-out duration-300 transform"
+                  leaveFrom="translate-x-0"
+                  leaveTo="translate-x-full"
+                >
+                  <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+                    <div className="flex items-center justify-between px-4">
+                      <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                      <button
+                        type="button"
+                        className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                        onClick={() => setMobileFiltersOpen(false)}
+                      >
+                        <span className="sr-only">Close menu</span>
+                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+                    </div>
 
-                {/* Filters */}
-                <form className="mt-4 border-t border-gray-200">
+                    {/* Filters */}
+                    <form className="mt-4 border-t border-gray-200">
 
                   {filters.map((section) => (
                     <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
@@ -347,7 +342,7 @@ function MobileFilter({ mobileFiltersOpen, setMobileFiltersOpen, handleFilter })
   );
 }
 
-function DesktopFilter({ handleFilter }) {
+function DesktopFilter({handleFilter}) {
   return (
     <>
       <form className="hidden lg:block">
@@ -400,7 +395,7 @@ function DesktopFilter({ handleFilter }) {
   );
 }
 
-function Pagination({ page, setPage, handlePage, totalItems = 55 }) {
+function Pagination() {
   return (
     <>
       <div className="flex flex-1 justify-between sm:hidden">
@@ -420,8 +415,8 @@ function Pagination({ page, setPage, handlePage, totalItems = 55 }) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{page * ITEMS_PER_PAGE}</span> of{' '}
-            <span className="font-medium">{totalItems}</span> results
+            Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
+            <span className="font-medium">97</span> results
           </p>
         </div>
         <div>
@@ -434,19 +429,19 @@ function Pagination({ page, setPage, handlePage, totalItems = 55 }) {
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </a>
             {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-
-
-
-            {Array.from({ length: Math.ceil(totalItems / ITEMS_PER_PAGE) }).map((el, index) => (
-              <div
-                onClick = {e=>handlePage(index+1)}
-                aria-current="page"
-                className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                {index+1}
-              </div>)
-            )}
-
+            <a
+              href="#"
+              aria-current="page"
+              className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              1
+            </a>
+            <a
+              href="#"
+              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            >
+              2
+            </a>
             <a
               href="#"
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
@@ -461,7 +456,7 @@ function Pagination({ page, setPage, handlePage, totalItems = 55 }) {
   );
 }
 
-function ProductGrid({ products }) {
+function ProductGrid({products}) {
   return (
     <>
       <div className="bg-white">
@@ -500,6 +495,6 @@ function ProductGrid({ products }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

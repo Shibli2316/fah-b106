@@ -9,17 +9,14 @@ export function fetchAllProducts(amount = 1) {
 }
 
 
-export function fetchProductsByFilters(filter, sort, pagination) {
+export function fetchProductsByFilters(filter) {
 
   // filter object
   let queryString ='';
   for (let key in filter){
-    const categoryValue = filter[key];
-    if(categoryValue.length){
-      const lastCategoryvalue = categoryValue[categoryValue.length-1]
-      queryString+=`${key}=${lastCategoryvalue}&`
-    }
+    queryString+=`${key}=${filter[key]}&`
   }
+<<<<<<< HEAD
 
   for(let key in sort){
     queryString+=`${key}=${sort[key]}&`
@@ -29,6 +26,8 @@ export function fetchProductsByFilters(filter, sort, pagination) {
     queryString+=`${key}=${pagination[key]}&`
   }
 
+=======
+>>>>>>> parent of 720994d (updated filters and products)
   return new Promise( async (resolve) => {
       const response = await fetch('http://localhost:8080/products?'+queryString);
       const data = await response.json();
